@@ -103,8 +103,9 @@ def respond(message, module, case, token, data_type):
 
 def login(user, password, module):
     conn = Connection(s, f"cn={user},ou=people,{BASE_DN}", password)
+    module_name = "modulo_" + module
     if conn.bind():
-        conn.search(f"{BASE_DN}", f"(&(objectClass=posixGroup)(cn={"modulo_" + module}))", search_scope=SUBTREE,
+        conn.search(f"{BASE_DN}", f"(&(objectClass=posixGroup)(cn={module_name}))", search_scope=SUBTREE,
                     attributes="memberUid")
         if user in conn.entries[0].memberUid.values:
             token = jwt.encode({"user": user, "module": module}, SECRET, algorithm="HS256")
